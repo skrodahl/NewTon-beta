@@ -325,7 +325,7 @@ function renderTitles(grid) {
     
     const finalsX = grid.centerX + grid.centerBuffer + 4 * (grid.matchWidth + grid.horizontalSpacing);
     finalsTitle.style.position = 'absolute';
-    finalsTitle.style.left = (finalsX + 50) + 'px';
+    finalsTitle.style.left = (finalsX + 320) + 'px';
     finalsTitle.style.top = titleY + 'px';
     finalsTitle.style.fontSize = '28px';
     finalsTitle.style.color = '#ff6b35';
