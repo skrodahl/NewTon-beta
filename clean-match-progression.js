@@ -247,9 +247,12 @@ function completeMatch(matchId, winnerPlayerNumber) {
         return false;
     }
 
-    // STEP 1: Save current state to history BEFORE making any changes
-    const historyDescription = `${matchId}: ${winner.name} defeats ${loser.name}`;
-    saveToHistory(historyDescription);
+    // STEP 1: Save current state to history BEFORE making any changes (only for real player matches)
+    const shouldSaveToHistory = !isWalkover(winner) && !isWalkover(loser);
+    if (shouldSaveToHistory) {
+        const historyDescription = `${matchId}: ${winner.name} defeats ${loser.name}`;
+        saveToHistory(historyDescription);
+    }
 
     // STEP 2: Set match as completed
     match.winner = winner;
@@ -1050,9 +1053,7 @@ function showWinnerConfirmation(matchId, winner, loser, onConfirm) {
         Declare <strong>${winner.name}</strong> as the WINNER<br>
         against <strong>${loser.name}</strong> in match <strong>${matchId}</strong>
         <br><br>
-        Is this correct?
-        <br><br>
-        <span style="color: #856404;">⚠️ This action is permanent and cannot be undone.</span>
+        Please confirm the winner, or press "Cancel":
     `;
     
     // Show modal
