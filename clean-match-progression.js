@@ -247,11 +247,22 @@ function completeMatch(matchId, winnerPlayerNumber) {
         return false;
     }
 
-    // STEP 1: Save current state to history BEFORE making any changes (only for real player matches)
-    const shouldSaveToHistory = !isWalkover(winner) && !isWalkover(loser);
+    // STEP 1: Save current state to history BEFORE making any changes
+    // Only save for operator-completed real player vs real player matches
+    const isRealPlayerMatch = winner.name && winner.name !== 'TBD' && winner.name !== 'Walkover' && !winner.isBye &&
+                         loser.name && loser.name !== 'TBD' && loser.name !== 'Walkover' && !loser.isBye &&
+                         !isWalkover(winner) && !isWalkover(loser);
+
+    const isOperatorAction = !match.autoAdvanced;
+
+    const shouldSaveToHistory = isRealPlayerMatch && isOperatorAction;
+
     if (shouldSaveToHistory) {
         const historyDescription = `${matchId}: ${winner.name} defeats ${loser.name}`;
         saveToHistory(historyDescription);
+        console.log(`✓ Saved operator action to history: ${historyDescription}`);
+    } else {
+        console.log(`⏭ Skipped history save: ${matchId} (walkover or auto-advancement)`);
     }
 
     // STEP 2: Set match as completed
@@ -1109,7 +1120,7 @@ function showWinnerConfirmation(matchId, winner, loser, onConfirm) {
 
 // TOURNAMENT HISTORY MANAGEMENT
 
-const MAX_HISTORY_ENTRIES = 10; // Keep last 10 states
+const MAX_HISTORY_ENTRIES = 50; // Keep last 50 states
 
 /**
  * Save current tournament state to history before making changes
