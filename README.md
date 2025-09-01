@@ -1,11 +1,25 @@
 # NewTon Tournament Manager - Beta
-**This version is currently not working.**   
-Work is ongoing to make the tournament management more resilient and less prone to operator mistakes.
 
 **NewTon Tournament Manager** is a fully self-contained web app for running double-elimination darts tournaments.  
 It runs entirely in your browser — no server, database, Internet connection, or installation required.
 
 Simply download the repository, open `tournament.html`, and start managing your tournament.
+
+**This version is currently not working.**   
+Work is ongoing to make the tournament management more resilient and less prone to operator mistakes.
+
+---
+
+## Backlog:
+- More bullet-proof, persistent, configuration settings.
+- Add "Generate Bracket" to the Tournament page.
+- Improve referee system.
+- Fix "Lane selection required" in config, it currently does nothing.
+- Make sure users can't be added or removed if a bracket is generated.
+- Payment status must be locked if a bracket is generated.
+- Make sure a new tournament can be created if one is already ongoing.
+- Make sure a tournament can't be reset without first being marked complete.
+  - Some way of marking a tournament complete, or inactive, is needed. Probably in the Tournament page.
 
 ---
 
