@@ -3,7 +3,7 @@
 Work is ongoing to make the tournament management more resilient and less prone to operator mistakes.
 
 **NewTon Tournament Manager** is a fully self-contained web app for running double-elimination darts tournaments.  
-It runs entirely in your browser — no server, database, or installation required.
+It runs entirely in your browser — no server, database, Internet connection, or installation required.
 
 Simply download the repository, open `tournament.html`, and start managing your tournament.
 
