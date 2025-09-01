@@ -15,7 +15,7 @@ Work is ongoing to make the tournament management more resilient and less prone 
 - More bullet-proof, persistent, configuration settings.
   - Lane management is shaky.
   - Fix "Lane selection required" in config, it currently does nothing.
-  - Add starting lane number, or ability to give lanes arbitrary names.
+  - Add starting lane number for offset, or ability to give lanes arbitrary names.
 - Add "Generate Bracket" to the Tournament page.
 - Improve referee system.
 - Make sure users can't be added or removed if a bracket is generated.
