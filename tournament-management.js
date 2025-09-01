@@ -97,6 +97,9 @@ function updateTournamentStatus() {
     statusDiv.className = 'alert alert-info';
     statusDiv.style.display = 'block';
     }
+
+    if (typeof updatePlayerManagementState === 'function') {
+        updatePlayerManagementState();
 }
 
 function loadRecentTournaments() {

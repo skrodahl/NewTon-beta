@@ -34,6 +34,7 @@ function addPlayer() {
     updatePlayersDisplay();
     updatePlayerCount();
     saveTournament();
+    updateResultsTable();
 }
 
 function removePlayer(playerId) {
@@ -42,6 +43,7 @@ function removePlayer(playerId) {
         updatePlayersDisplay();
         updatePlayerCount();
         saveTournament();
+	updateResultsTable();
     }
 }
 
@@ -52,6 +54,7 @@ function togglePaid(playerId) {
         updatePlayersDisplay();
         updatePlayerCount();
         saveTournament();
+	updateResultsTable();
     }
 }
 
@@ -61,8 +64,12 @@ function openStatsModal(playerId) {
 
     currentStatsPlayer = player;
     document.getElementById('statsPlayerName').textContent = `${player.name} - Statistics`;
-    document.getElementById('statsShortLegs').value = player.stats.shortLegs || 0;
     document.getElementById('statsTons').value = player.stats.tons || 0;
+    // Convert old format to new format if needed
+    if (typeof player.stats.shortLegs === 'number') {
+        player.stats.shortLegs = [];
+    }
+    updateShortLegsList();
     document.getElementById('stats180s').value = player.stats.oneEighties || 0;
     
     updateHighOutsList();
@@ -111,7 +118,6 @@ function removeHighOut(index) {
 function saveStats() {
     if (!currentStatsPlayer) return;
 
-    currentStatsPlayer.stats.shortLegs = parseInt(document.getElementById('statsShortLegs').value) || 0;
     currentStatsPlayer.stats.tons = parseInt(document.getElementById('statsTons').value) || 0;
     currentStatsPlayer.stats.oneEighties = parseInt(document.getElementById('stats180s').value) || 0;
 
@@ -163,8 +169,8 @@ function updatePlayersDisplay() {
             </div>
             <div class="stats-grid">
                 <div class="stat-item">
-                    <span>Short Legs:</span>
-                    <span>${player.stats.shortLegs || 0}</span>
+		<span>Short Legs:</span>
+		<span>${Array.isArray(player.stats.shortLegs) ? player.stats.shortLegs.length : 0}</span>
                 </div>
                 <div class="stat-item">
                     <span>High Outs:</span>
@@ -186,6 +192,7 @@ function updatePlayersDisplay() {
     `).join('');
 
     container.innerHTML = html;
+    updatePlayerManagementState();
 }
 
 function updatePlayerCount() {
@@ -202,5 +209,94 @@ function clearAllPlayers() {
         updatePlayersDisplay();
         updatePlayerCount();
         saveTournament();
+    }
+}
+
+function addShortLeg() {
+    const darts = parseInt(document.getElementById('statsShortLegDarts').value);
+    if (!darts || darts < 9 || darts > 21) {
+        alert('Please enter valid dart count (9-21)');
+        return;
+    }
+
+    if (!Array.isArray(currentStatsPlayer.stats.shortLegs)) {
+        currentStatsPlayer.stats.shortLegs = [];
+    }
+
+    currentStatsPlayer.stats.shortLegs.push(darts);
+    document.getElementById('statsShortLegDarts').value = '';
+    updateShortLegsList();
+}
+
+function updateShortLegsList() {
+    const container = document.getElementById('shortLegsList');
+    if (!currentStatsPlayer || !Array.isArray(currentStatsPlayer.stats.shortLegs)) {
+        container.innerHTML = '';
+        return;
+    }
+
+    const html = currentStatsPlayer.stats.shortLegs.map((darts, index) => `
+        <span style="background: #f8f9fa; padding: 5px 10px; margin: 2px; border-radius: 3px; display: inline-block;">
+            ${darts} <button onclick="removeShortLeg(${index})" style="background: none; border: none; color: red; cursor: pointer;">×</button>
+        </span>
+    `).join('');
+
+    container.innerHTML = `<div style="margin-top: 10px;"><strong>Short Legs:</strong><br>${html}</div>`;
+}
+
+function removeShortLeg(index) {
+    if (currentStatsPlayer && Array.isArray(currentStatsPlayer.stats.shortLegs)) {
+        currentStatsPlayer.stats.shortLegs.splice(index, 1);
+        updateShortLegsList();
+    }
+}
+
+function updatePlayerManagementState() {
+    const tournamentActive = tournament && tournament.status === 'active' && tournament.bracket && matches && matches.length > 0;
+    const tournamentExists = !!tournament;
+
+    // Get UI elements
+    const addBtn = document.querySelector('button[onclick="addPlayer()"]');
+    const clearBtn = document.querySelector('button[onclick="clearAllPlayers()"]');
+    const playerInput = document.getElementById('playerName');
+    const playersContainer = document.getElementById('playersContainer');
+
+    if (tournamentActive) {
+        // Lock player management during active tournament
+        if (addBtn) {
+            addBtn.disabled = true;
+            addBtn.textContent = 'Tournament Active';
+            addBtn.style.opacity = '0.6';
+        }
+        if (clearBtn) {
+            clearBtn.disabled = true;
+            clearBtn.style.opacity = '0.6';
+        }
+        if (playerInput) {
+            playerInput.disabled = true;
+            playerInput.placeholder = 'Tournament in progress';
+            playerInput.style.opacity = '0.6';
+        }
+    } else {
+        // Restore normal state
+        if (addBtn) {
+            addBtn.disabled = false;
+            addBtn.textContent = 'Add Player';
+            addBtn.style.opacity = '1';
+        }
+        if (clearBtn) {
+            clearBtn.disabled = false;
+            clearBtn.style.opacity = '1';
+        }
+        if (playerInput) {
+            playerInput.disabled = false;
+            playerInput.placeholder = 'Enter player name';
+            playerInput.style.opacity = '1';
+        }
+    }
+
+    if (!tournamentExists && playersContainer) {
+        // Show message when no tournament exists
+        playersContainer.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Please create a tournament first before adding players</p>';
     }
 }
