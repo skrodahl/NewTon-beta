@@ -12,6 +12,7 @@ Work is ongoing to make the tournament management more resilient and less prone 
 
 ## Backlog:
 - Align menu items to the far left.
+- Date picker for New Tournament; auto-select current date.
 - More bullet-proof, persistent, configuration settings.
   - Lane management is shaky.
   - Fix "Lane selection required" in config, it currently does nothing.
