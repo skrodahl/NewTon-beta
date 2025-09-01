@@ -11,6 +11,7 @@ Work is ongoing to make the tournament management more resilient and less prone 
 ---
 
 ## Backlog:
+- Align menu items to the far left.
 - More bullet-proof, persistent, configuration settings.
 - Add "Generate Bracket" to the Tournament page.
 - Improve referee system.
